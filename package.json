@@ -1,0 +1,15 @@
+{
+  "name": "vtube",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "backend"
+  ],
+  "license": "ISC",
+  "author": "Jay kabdwal",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
