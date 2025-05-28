@@ -39,4 +39,10 @@ app.use(express.static("public"));
 // Helps in handling client-side cookies
 app.use(cookieParser());
 
+//import router
+import userRoutes from './routes/user.routes.js';
+
+//declaration of router
+app.use("/api/v1/users", userRoutes);
+
 export { app };
