@@ -16,11 +16,12 @@ const uploadOnColudinary = async (localFilePath) => {
       resource_type: "auto",
     });
     //file has been uploaded succesfully
-    console.log("file uploaded colidinary", response.url);
-    return response;
+    // console.log("file uploaded colidinary", response.url);
+    // return response;
+    fs.unlinkSync(localFilePath);
   } catch (err) {
     //remove locally saved temporary file
-    fs.unlinkSync(localFilePath); 
+    fs.unlinkSync(localFilePath);
     return null;
   }
 };
