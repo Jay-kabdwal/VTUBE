@@ -19,7 +19,8 @@ const uploadOnColudinary = async (localFilePath) => {
     console.log("file uploaded colidinary", response.url);
     return response;
   } catch (err) {
-    fs.unlinkSync(localFilePath); //remove locally saved temporary file
+    //remove locally saved temporary file
+    fs.unlinkSync(localFilePath); 
     return null;
   }
 };
