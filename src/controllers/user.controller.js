@@ -33,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
   let coverImageLocalPath;
   if (
     req.files &&
@@ -47,8 +46,11 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "avatar is required");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  // If both paths are same, don't delete file after first upload
+  const isSameFile = avatarLocalPath === coverImageLocalPath;
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath, !isSameFile);
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath, true);
 
   if (!avatar) {
     throw new ApiError(400, "avatar is required");
