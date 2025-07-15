@@ -100,7 +100,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //Login-User
 const loginUser = asyncHandler(async (req, res) => {
   // req body
-  //check for email and username
+  // check for email and username
   // check for user
   // check password
   // access and refresh token
@@ -158,7 +158,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 //Logout-User
 const logoutUser = asyncHandler(async (req, res) => {
-  User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
@@ -228,4 +228,72 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     throw new ApiError(401, error?.message || "Invalid refresh token");
   }
 });
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+
+//change password
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const user = await User.findById(req.user?._id);
+
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(400, "Invalid old password");
+  }
+
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "password cahnged succesfully"));
+});
+
+//fetch user 
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "user fetched"))
+});
+
+//update account details
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullName, email } = req.body;
+
+  if (!(fullName || email)) {
+    throw new ApiError(400, "all fields are required");
+  }
+
+  const user = User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        fullName,
+        email,
+      }
+    },
+    { new: true }
+  ).select("-password")
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200, user, "updated sucessfully"));
+
+});
+
+//updaate files
+const updaateUserAvatar = asyncHandler(async(req,res)=>{
+  
+});
+
+
+//exports
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails
+};
