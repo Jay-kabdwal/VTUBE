@@ -281,7 +281,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 });
 
-//updaate files
+//updaate avatar
 const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path
 
@@ -303,8 +303,42 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       }
     },
     { new: true }
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "avatar uploaded"));
+
+
+});
+
+//update cover image
+const updateUserCoverImage = asyncHandler(async (req, res) => {
+  const coverImageLocalPath = req.file?.path
+
+  if (!coverImageLocalPath) {
+    throw new ApiError(400, "coverImage file missing");
+  }
+
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  if (!coverImage.url) {
+    throw new ApiError(400, "error while uploading avatar");
+  }
+
+  const user = await findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        coverImage: coverImage.url
+      }
+    },
+    { new: true }
   ).select("-password")
 
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "coverImage uploaded"));
 
 });
 
@@ -319,4 +353,6 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
+  updateUserCoverImage,
+  
 };
