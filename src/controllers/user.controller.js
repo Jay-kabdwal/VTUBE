@@ -342,6 +342,17 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
 });
 
+//channel subscriber get user channel proile  (mongodb aggeregation pipelines) (joining subscription) 
+const getUserChannelProfile = asyncHandler(async (req,res)=>{
+  const {username} = req.params
+
+  if(!username?.trim()){
+    throw new ApiError(400,"username missing");
+  }
+
+
+})
+
 
 //exports
 export {
@@ -354,5 +365,4 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  
 };
